@@ -13,7 +13,12 @@
 Installation is similar to a standard bundle.
 http://symfony.com/doc/current/cookbook/bundles/installation.html
 
-* Add bundle to composer.json: https://packagist.org/packages/symfonycontrib/cron-bundle
+* Add bundle to composer.json: https://packagist.org/packages/symfonycontrib/cron-bundle or
+
+```sh
+composer require symfonycontrib/cron-bundle
+```
+
 * Add bundle to AppKernel.php:
 
 ```php
