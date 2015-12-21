@@ -6,8 +6,13 @@ parameters:
 services:
     cron.executer:
         class: %cron.executer.class%
+        arguments:
+            - @logger
         calls:
             - [setContainer, [@service_container]]
+        tags:
+            - name: monolog.logger
+              channel: cron
 
     cron.form.cron:
         class: %cron.form.cron.class%

@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use SymfonyContrib\Bundle\CronBundle\Entity\Cron;
 use SymfonyContrib\Bundle\CronBundle\Entity\Repository\CronRepository;
 use Symfony\Component\Console\Output\OutputInterface;
+use Monolog\Logger;
 
 /**
  * Executes application cron tasks according to configuration.
@@ -21,6 +22,14 @@ class CronExecuter extends ContainerAware
 
     /** @var OutputInterface */
     protected $commandOutput;
+
+    /** @var  Logger */
+    protected $logger;
+
+    public function __construct($logger)
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * Get the Doctrine entity manager.
@@ -114,6 +123,7 @@ class CronExecuter extends ContainerAware
         } catch (\Exception $e) {
             $cron->setStatus('failed');
             print $e->getMessage();
+            $this->logger->error('Cron failed: ' . $e->getMessage());
         }
 
         $timeEnd = microtime(true);
