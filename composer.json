@@ -13,16 +13,14 @@
         }
     ],
     "require": {
-        "php": ">=5.4",
-        "symfony/symfony": "~2.4",
-        "mtdowling/cron-expression": "~1.0"
+        "symfony/symfony":           "^3.0",
+        "mtdowling/cron-expression": "^1.0"
     },
     "autoload": {
-        "psr-0": {
+        "psr-4": {
             "SymfonyContrib\\Bundle\\CronBundle\\": ""
         }
     },
-    "target-dir": "SymfonyContrib/Bundle/CronBundle",
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"

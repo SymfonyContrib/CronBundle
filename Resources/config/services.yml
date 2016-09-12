@@ -1,26 +1,15 @@
-parameters:
-    cron.executer.class: SymfonyContrib\Bundle\CronBundle\CronExecuter
-    cron.form.cron.class: SymfonyContrib\Bundle\CronBundle\Form\CronForm
-    cron.twig.extension.class: SymfonyContrib\Bundle\CronBundle\Twig\CronExtension
-
 services:
-    cron.executer:
-        class: %cron.executer.class%
+    cron.executor:
+        class: SymfonyContrib\Bundle\CronBundle\CronExecutor
         arguments:
-            - @logger
+            - "@logger"
         calls:
-            - [setContainer, [@service_container]]
+            - [setContainer, ["@service_container"]]
         tags:
             - name: monolog.logger
               channel: cron
 
-    cron.form.cron:
-        class: %cron.form.cron.class%
-        tags:
-            - name: form.type
-              alias: cron_form
-
     cron.twig.extension:
-        class: %cron.twig.extension.class%
+        class: SymfonyContrib\Bundle\CronBundle\Twig\CronExtension
         tags:
             - name: twig.extension

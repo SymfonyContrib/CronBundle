@@ -14,7 +14,6 @@
                 <tr>
                     <th>Enabled</th>
                     <th>Name</th>
-                    <th>Job</th>
                     <th>Run Interval</th>
                     <th>Status</th>
                     <th>Last</th>
@@ -34,8 +33,7 @@
                                 <span class="text-hide">{{ cron.enabled ? 'Y' : 'N' }}</span>
                             </span>
                         </td>
-                        <td>{{ cron.name }}</td>
-                        <td>{{ cron.job }}</td>
+                        <td><span title="{{ cron.job }}">{{ cron.name }}</span></td>
                         <td>{{ cron.runInterval }}</td>
                         <td>{{ cron.status }}</td>
                         <td>{{ cron.durationLast }}</td>

@@ -3,7 +3,8 @@
 namespace SymfonyContrib\Bundle\CronBundle;
 
 use Doctrine\Orm\EntityManager;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use SymfonyContrib\Bundle\CronBundle\Entity\Cron;
 use SymfonyContrib\Bundle\CronBundle\Entity\Repository\CronRepository;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -12,8 +13,10 @@ use Monolog\Logger;
 /**
  * Executes application cron tasks according to configuration.
  */
-class CronExecuter extends ContainerAware
+class CronExecutor implements ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     /** @var EntityManager */
     protected $em;
 
@@ -81,10 +84,11 @@ class CronExecuter extends ContainerAware
     /**
      * Execute a cron by name.
      *
-     * @param $name
+     * @param string $name
      */
     public function runByName($name)
     {
+        /** @var Cron $cron */
         $cron = $this->getRepo()->findOneBy(['name' => $name]);
         $this->runCron($cron);
     }
@@ -137,7 +141,7 @@ class CronExecuter extends ContainerAware
     /**
      * @param OutputInterface $commandOutput
      *
-     * @return CronExecuter
+     * @return CronExecutor
      */
     public function setCommandOutput($commandOutput)
     {

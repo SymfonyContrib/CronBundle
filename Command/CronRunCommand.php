@@ -1,7 +1,4 @@
 <?php
-/**
- *
- */
 
 namespace SymfonyContrib\Bundle\CronBundle\Command;
 
@@ -11,8 +8,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Console command to run cron tasks.
+ */
 class CronRunCommand extends ContainerAwareCommand
 {
+    /**
+     * @inheritdoc
+     */
     protected function configure()
     {
         $this->setName('cron:run')
@@ -22,18 +25,24 @@ class CronRunCommand extends ContainerAwareCommand
             ->addOption('include-disabled', null, InputOption::VALUE_NONE, 'Include disabled cron jobs.');
     }
 
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     *
+     * @return void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $cronExecuter = $this->getContainer()->get('cron.executer');
-        $cronExecuter->setCommandOutput($output);
+        $cronExecutor = $this->getContainer()->get('cron.executor');
+        $cronExecutor->setCommandOutput($output);
         $response = '';
 
         if ($name = $input->getArgument('name')) {
-            $cronExecuter->runByName($name);
+            $cronExecutor->runByName($name);
         } elseif ($input->getOption('all')) {
-            $cronExecuter->runAll($input->getOption('include-disabled'));
+            $cronExecutor->runAll($input->getOption('include-disabled'));
         } else {
-            $cronExecuter->runDue();
+            $cronExecutor->runDue();
         }
 
         $output->writeln($response);

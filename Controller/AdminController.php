@@ -7,13 +7,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use SymfonyContrib\Bundle\CronBundle\Entity\Cron;
+use SymfonyContrib\Bundle\CronBundle\Form\CronForm;
 
+/**
+ * Admin actions to manage cron entries.
+ */
 class AdminController extends Controller
 {
     /**
      * Lists all cron entries.
+     *
+     * @return Response
      */
-    public function listAction(Request $request)
+    public function listAction()
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -23,6 +29,7 @@ class AdminController extends Controller
         $result = $em->createQuery($dql)->getResult();
 
         $crons = [];
+        /** @var Cron $cron */
         foreach ($result as $cron) {
             $crons[$cron->getGroup() ?: 'Default'][] = $cron;
         }
@@ -50,9 +57,7 @@ class AdminController extends Controller
             $cron = new Cron();
         }
 
-        $form = $this->createForm('cron_form', $cron, [
-            'cancel_url' => $this->generateUrl('cron_admin_list'),
-        ]);
+        $form = $this->createForm(CronForm::class, $cron);
 
         $form->handleRequest($request);
 
@@ -69,8 +74,9 @@ class AdminController extends Controller
         }
 
         return $this->render('CronBundle:Admin:form.html.twig', [
-            'cron' => $cron,
-            'form' => $form->createView(),
+            'cron'       => $cron,
+            'form'       => $form->createView(),
+            'cancel_url' => $this->generateUrl('cron_admin_list'),
         ]);
     }
 
@@ -117,19 +123,26 @@ class AdminController extends Controller
         $em->remove($cron);
         $em->flush();
 
-        $msg = 'Deleted ' . $cron->getLabel();
+        $msg = 'Deleted ' . $cron->getName();
         $this->get('session')->getFlashBag()->add('success', $msg);
 
         return $this->redirect($this->generateUrl('cron_admin_list'));
     }
 
+    /**
+     * Run a cron task via the admin interface.
+     *
+     * @param int $id
+     *
+     * @return RedirectResponse
+     */
     public function runAction($id)
     {
         $cron = $this->getDoctrine()
             ->getRepository('CronBundle:Cron')
             ->find($id);
-        $executer = $this->get('cron.executer');
-        $executer->runCron($cron);
+        $executor = $this->get('cron.executor');
+        $executor->runCron($cron);
 
         // Create a success message for the user.
         $msg = 'Ran ' . $cron->getName();

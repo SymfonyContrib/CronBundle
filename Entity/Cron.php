@@ -1,4 +1,5 @@
 <?php
+
 namespace SymfonyContrib\Bundle\CronBundle\Entity;
 
 use Doctrine\ORM\Event\PreUpdateEventArgs;
@@ -6,10 +7,12 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Cron\CronExpression;
 
 /**
- *
+ * Repeatable task.
  */
 class Cron
 {
+    const GROUP_DEFAULT = 'default';
+
     /**
      * @var int
      */
@@ -94,7 +97,7 @@ class Cron
     public function __construct()
     {
         $this->desc         = '';
-        $this->group        = 'Default';
+        $this->group        = self::GROUP_DEFAULT;
         $this->weight       = 0;
         $this->enabled      = true;
         $this->status       = '';
@@ -385,7 +388,7 @@ class Cron
      */
     public function setGroup($group)
     {
-        $this->group = $group ?: 'Default';
+        $this->group = $group ?: self::GROUP_DEFAULT;
     }
 
     /**

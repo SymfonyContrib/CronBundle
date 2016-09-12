@@ -18,7 +18,7 @@ SymfonyContrib\Bundle\CronBundle\Entity\Cron:
             type: string
             length: 255
             options:
-                comment: Format: SymfonyServiceName:MethodName
+                comment: 'Format: SymfonyServiceName:MethodName'
         desc:
             column: description
             type: string
